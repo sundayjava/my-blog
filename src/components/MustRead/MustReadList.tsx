@@ -48,7 +48,7 @@ const MustReadList = () => {
           </div>
         </div>
         <div className="lg:w-[50%] lg:block flex flex-wrap justify-center">
-          {[1, 1, 1, 1].map((items, index) => (
+          {[1, 1, 1, 1].map((_items, index) => (
             <MustReadCard index={index} />
           ))}
         </div>

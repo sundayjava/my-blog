@@ -11,7 +11,7 @@ const WeeklyList = () => {
             </span>
           </div>
           <div className="flex gap-5 lg:flex-row flex-col">
-            {[1, 2, 3].map((items) => (
+            {[1, 2, 3].map((_items) => (
               <WeeklyCard />
             ))}
           </div>

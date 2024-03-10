@@ -26,7 +26,7 @@ const Homepage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const q = query(collection(db, "blog"), where("category", "==", 'Transfer'));
+        // const q = query(collection(db, "blog"), where("category", "==", 'Transfer'));
         const querySnapshot = await getDocs(collection(db, "blog"));
         const data = querySnapshot.docs.map((doc) => ({
           id: doc.id,
