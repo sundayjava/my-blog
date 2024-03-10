@@ -6,7 +6,7 @@ import WeeklyList from "../components/weeklyhighlight/WeeklyList";
 import { useNavigate } from "react-router-dom";
 import TypewriterComponent from "typewriter-effect";
 import { useEffect, useState } from "react";
-import { getDocs, collection, query, where } from "firebase/firestore";
+import { getDocs, collection} from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 
 type BlogData = {
