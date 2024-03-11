@@ -1,5 +1,6 @@
 import { Avatar } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
+import { useNavigate } from "react-router-dom";
 
 type BlogData = {
   id: string;
@@ -13,8 +14,12 @@ type BlogData = {
 
 const NewsCard = (props: { item: BlogData }) => {
   const { item } = props;
+  const navigate = useNavigate();
   return (
-    <div className="md:w-[33%] w-full h-full p-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-yellow-50">
+    <div
+      className="md:w-[33%] w-full h-full p-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-yellow-50"
+      onClick={() => navigate(`/news/${item.id}`)}
+    >
       <img
         className="w-full h-[50%] object-cover rounded-md"
         src={item.photoURL}
@@ -27,8 +32,8 @@ const NewsCard = (props: { item: BlogData }) => {
             sx={{
               bgcolor: deepPurple[500],
               color: "white",
-              width:20,
-              height:20,
+              width: 20,
+              height: 20,
               cursor: "pointer",
             }}
           >

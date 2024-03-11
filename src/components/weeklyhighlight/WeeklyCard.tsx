@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import MomentTimeDisplay from "../../utils/dateFormatted";
 
 type BlogData = {
@@ -13,9 +14,12 @@ type BlogData = {
 
 const WeeklyCard = (props:{item:BlogData}) => {
   const {item} = props
+  const navigate = useNavigate()
 
   return (
-    <div className="lg:w-[33%] w-full h-full p-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-yellow-50">
+    <div className="lg:w-[33%] w-full h-full p-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-yellow-50"
+    onClick={() => navigate(`/news/${item.id}`)}
+    >
       <img
         className="w-full h-[50%] object-cover rounded-md"
         src={item.photoURL}
