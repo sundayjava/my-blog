@@ -20,7 +20,7 @@ const NewsList = (props:{blog:BlogData[]}) => {
         </span>
       </div>
       <div className="flex gap-5 md:flex-row flex-col">
-        {props.blog.slice(5,8).map((items) => (
+        {props.blog.slice(4,7).map((items) => (
           <NewsCard item={items}/>
         ))}
       </div>

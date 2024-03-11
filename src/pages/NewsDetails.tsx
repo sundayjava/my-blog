@@ -132,8 +132,8 @@ const NewsDetails = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                   <div>
-                    {[1, 2, 3].map((_item) => (
-                      <div className="mb-4 flex gap-4 border-b py-2">
+                    {[1, 2, 3].map((item) => (
+                      <div key={item} className="mb-4 flex gap-4 border-b py-2">
                         <img
                           className="w-[3vw] h-[3vw] rounded-full object-cover"
                           src="https://th.bing.com/th?id=ORMS.71179e246969323f1312c4087f8c0fae&pid=Wdp&w=300&h=156&qlt=90&c=1&rs=1&dpr=1&p=0"

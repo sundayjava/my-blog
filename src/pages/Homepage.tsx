@@ -5,11 +5,13 @@ import WeeklyList from "../components/weeklyhighlight/WeeklyList";
 import { useNavigate } from "react-router-dom";
 import TypewriterComponent from "typewriter-effect";
 import { useEffect, useState } from "react";
-import { getDocs, collection} from "firebase/firestore";
+import { getDocs, collection, orderBy, query } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
+import MomentTimeDisplay from "../utils/dateFormatted";
 
 type BlogData = {
-  id:string,
+  id: string;
+  createdAt: string;
   category: string;
   heading: string;
   mainbody: string;
@@ -21,16 +23,19 @@ type BlogData = {
 const Homepage = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogData[]>([]);
+  const [descblogs, setDesBlogs] = useState<BlogData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const q = query(collection(db, "blog"), where("category", "==", 'Transfer'));
         const querySnapshot = await getDocs(collection(db, "blog"));
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data() 
-        } as BlogData));
+        const data = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as BlogData)
+        );
         setBlogs(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -38,20 +43,34 @@ const Homepage = () => {
     };
 
     fetchData();
-
   }, []);
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const querySnapshot = await getDocs(collection(db, "blog"));
-  //     querySnapshot.forEach((doc) => {
-  //       const blogData = doc.data() as BlogData;
-  //       setNewBlog(blogData);
-  //     });
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const q = query(
+        //   collection(db, "blog"),
+        //   orderBy("createdAt", "desc"),
+        //   where("category", "==", "Transfer")
+        // );
+        const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
 
-  //   getData();
-  // }, []);
+        const querySnapshot = await getDocs(q);
+        const data = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as BlogData)
+        );
+        setDesBlogs(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full">
@@ -85,7 +104,7 @@ const Homepage = () => {
       <div className="md:my-6 flex h-[40%] rounded-lg">
         <div
           className="lg:w-[65%] w-full relative cursor-pointer flex justify-center"
-          onClick={()=>navigate(`/news/${blogs[0]?.id}`)}
+          onClick={() => navigate(`/news/${blogs[0]?.id}`)}
         >
           <img
             className="lg:w-[45vw] w-full h-full hover:rounded-lg rounded-md "
@@ -96,23 +115,28 @@ const Homepage = () => {
               {blogs[0]?.heading}
             </p>
             <p className="text-[14px] w-[35vw] text-center mt-1">
-            {blogs[0]?.subheading}
+              {blogs[0]?.subheading}
             </p>
           </div>
           <div className=" absolute bottom-2 m-auto leading-5 lg:hidden bg-black/20">
             <p className=" text-[20px] font-bold text-white text-center hover:underline">
-            {blogs[0]?.heading}
+              {blogs[0]?.heading}
             </p>
           </div>
         </div>
-        <div className="w-[30%] hidden lg:flex flex-col justify-center">
-          {blogs.slice(1,5).map((items, index) => (
-            <div className="flex gap-2 mb-4 cursor-pointer border-b pb-2" key={items.id} onClick={()=>navigate(`/news/${items.id}`)}>
+        <div className="w-[30%] hidden lg:flex flex-col justify-center items-center">
+          {blogs.slice(1, 4).map((items, index) => (
+            <div
+              className="flex gap-2 mb-4 cursor-pointer border-b pb-2 items-center"
+              key={items.id}
+              onClick={() => navigate(`/news/${items.id}`)}
+            >
               <img
                 className="w-[5vw] h-[4vw] object-cover rounded-md"
                 src={items.photoURL}
               />
               <div>
+                <h2 className="text-[15px] font-[500]">{items.heading}</h2>
                 <div className="flex justify-between items-center">
                   <p className="text-[12px] text-yellow-600">
                     {index % 2 ? (
@@ -121,25 +145,24 @@ const Homepage = () => {
                       "ON"
                     )}
                   </p>{" "}
-                  <span className="text-[14px] font-normal">Newstopedia</span>{" "}
-                  <span className="text-[14px] text-black/40">1hrs ago</span>
+                  <span className="text-[14px] font-normal">
+                    <p className="mt-2 text-[12px]">{items.category} </p>
+                  </span>{" "}
+                  <span className="text-[14px] text-black/40">
+                    {items.createdAt ? (
+                      <MomentTimeDisplay timestamp={items.createdAt} />
+                    ) : null}
+                  </span>
                 </div>
-                <h2 className="mt-2 text-[15px] font-[500]">
-                  {items.heading.slice(0,30)}...
-                </h2>
-                <p className="mt-2 text-[13px] text-yellow-600 font-[500]">
-                  {items.category} <span className="text-black/40 text-[12px]">-</span>{" "}
-                  <span className="text-black/40 text-[12px]">2 min read</span>
-                </p>
               </div>
             </div>
           ))}
         </div>
       </div>
       <hr className="mb-2" />
-      <NewsList blog={blogs}/>
+      <NewsList blog={blogs} />
       <hr className="mb-2 mt-2" />
-      <WeeklyList />
+      <WeeklyList item={descblogs}/>
     </div>
   );
 };

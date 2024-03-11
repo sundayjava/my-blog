@@ -1,7 +1,18 @@
 import { NavigateNext } from '@mui/icons-material';
 import WeeklyCard from './WeeklyCard';
 
-const WeeklyList = () => {
+type BlogData = {
+  id: string;
+  createdAt: string;
+  category: string;
+  heading: string;
+  mainbody: string;
+  middlehead: string;
+  photoURL: string;
+  subheading: string;
+};
+
+const WeeklyList = (props:{item:BlogData[]}) => {
     return (
         <div className="w-full mt-2 px-5">
           <div className="flex justify-between items-center py-8">
@@ -11,8 +22,8 @@ const WeeklyList = () => {
             </span>
           </div>
           <div className="flex gap-5 lg:flex-row flex-col">
-            {[1, 2, 3].map((_items) => (
-              <WeeklyCard />
+            {props.item.slice(0,3).map((items) => (
+              <WeeklyCard key={items.id} item={items}/>
             ))}
           </div>
         </div>
