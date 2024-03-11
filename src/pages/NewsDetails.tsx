@@ -97,6 +97,7 @@ const NewsDetails = () => {
               {blogDetail?.heading}
             </h1>
           </div>
+          <div id="hbagency_space_127054"></div>
           <div>
             <img
               className="w-full h-[50%] object-cover rounded-md"
@@ -107,7 +108,10 @@ const NewsDetails = () => {
                 {blogDetail?.category} news
               </span>
               <span className="text-black/40 text-[12px]">
-                Posted on {blogDetail?.createdAt ? blogDetail?.createdAt.substring(0, 24) : null}
+                Posted on{" "}
+                {blogDetail?.createdAt
+                  ? blogDetail?.createdAt.substring(0, 24)
+                  : null}
               </span>
             </div>
             <hr />
@@ -116,6 +120,11 @@ const NewsDetails = () => {
             <h1 className="lg:text-[25px] text-[22px] text-black/90 font-[500] leading-9 w-full">
               {blogDetail?.subheading}
             </h1>
+            <div className="hb-ad-inpage">
+              <div className="hb-ad-inner">
+                <div className="hbagency_cls hbagency_space_127055"></div>
+              </div>{" "}
+            </div>
             <h1 className="text-[22px] py-4 text-black/70 leading-7">
               {blogDetail?.middlehead}
             </h1>

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { getDocs, collection, orderBy, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import MomentTimeDisplay from "../utils/dateFormatted";
-import notfound from '../assets/notfound.png'
+import notfound from "../assets/notfound.png";
 
 type BlogData = {
   id: string;
@@ -91,7 +91,7 @@ const Homepage = () => {
           </li>
         ))}
       </ul>
-
+      <div id="hbagency_space_127054"></div>
       <div className="mt-4 mb-9 lg:px-5 px-1 py-1 bg-gray-100 rounded-lg text-[13px] font-bold flex gap-2 justify-center cursor-pointer">
         <TypewriterComponent
           options={{
@@ -107,7 +107,12 @@ const Homepage = () => {
           }}
         />
       </div>
-
+      <div id="HB_Footer_Close_hbagency_space_127049">
+        <div id="HB_CLOSE_hbagency_space_127049"></div>
+        <div id="HB_OUTER_hbagency_space_127049">
+          <div id="hbagency_space_127049"></div>
+        </div>
+      </div>
       {blogs.length ? (
         <div className="md:my-6 flex h-[40%] rounded-lg">
           <div
@@ -169,12 +174,20 @@ const Homepage = () => {
         </div>
       ) : (
         <div className="flex flex-col p-5 justify-center items-center">
-          <img src={notfound}/>
-          <span className="text-[12px] text-black/50 font-bold">No data found for <span className="text-yellow-700">{changeCategory}</span></span>
+          <img src={notfound} />
+          <span className="text-[12px] text-black/50 font-bold">
+            No data found for{" "}
+            <span className="text-yellow-700">{changeCategory}</span>
+          </span>
         </div>
       )}
+      <div className="hb-ad-inpage">
+        <div className="hb-ad-inner">
+          <div className="hbagency_cls hbagency_space_127055"></div>
+        </div>{" "}
+      </div>
       <hr className="mb-2" />
-     {blogs && <NewsList blog={blogs} />}
+      {blogs && <NewsList blog={blogs} />}
       <hr className="mb-2 mt-2" />
       <WeeklyList item={descblogs} />
     </div>
