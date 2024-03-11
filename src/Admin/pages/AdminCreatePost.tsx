@@ -71,6 +71,7 @@ const AdminCreatePost = () => {
                   subheading: blogData.subHead,
                   middlehead: blogData.middleHead,
                   mainbody: blogData.mainBody,
+                  createdAt:Date()
                 });
 
                 setIsLoading(false);

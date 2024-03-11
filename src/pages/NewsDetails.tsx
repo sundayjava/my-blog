@@ -4,34 +4,42 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../config/firebaseConfig";
 import { useParams } from "react-router-dom";
 
 type BlogData = {
-  id:string,
+  id: string;
   category: string;
   heading: string;
   mainbody: string;
   middlehead: string;
   photoURL: string;
   subheading: string;
+  createdAt: string;
 };
 
 const NewsDetails = () => {
-  const [blogDetail, setBlogDetail] = useState<BlogData>()
+  const [blogDetail, setBlogDetail] = useState<BlogData>();
   const [blogs, setBlogs] = useState<BlogData[]>([]);
-  const {id} = useParams()
-  
+  const { id } = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const docRef = doc(db, "blog", `${id}`);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const blog = docSnap.data() as BlogData
-          setBlogDetail(blog)
+          const blog = docSnap.data() as BlogData;
+          setBlogDetail(blog);
         } else {
           console.log("No such document!");
         }
@@ -46,14 +54,20 @@ const NewsDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const q = query(collection(db, "blog"), where("category", "==", blogDetail?.category));
+        const q = query(
+          collection(db, "blog"),
+          where("category", "==", blogDetail?.category)
+        );
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data()
-        } as BlogData));
+        const data = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as BlogData)
+        );
 
-        const selectedData = data.filter(rev => rev.id !== id)
+        const selectedData = data.filter((rev) => rev.id !== id);
         setBlogs(selectedData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -61,12 +75,11 @@ const NewsDetails = () => {
     };
 
     fetchData();
-
   }, []);
 
-  const paragraphs = blogDetail?.mainbody.split("\n").map((line, index) => (
-    <p key={index}>{line}</p>
-  ));
+  const paragraphs = blogDetail?.mainbody
+    .split("\n")
+    .map((line, index) => <p key={index}>{line}</p>);
 
   return (
     <div>
@@ -74,16 +87,9 @@ const NewsDetails = () => {
         <div className="lg:w-[85%] w-full">
           <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 1 }}>
             <Link underline="hover" color="inherit" href="/">
-              MUI
+              Newstopedia
             </Link>
-            <Link
-              underline="hover"
-              color="inherit"
-              href="/material-ui/getting-started/installation/"
-            >
-              Core
-            </Link>
-            <Typography color="text.primary">Breadcrumbs</Typography>
+            <Typography color="text.primary">{blogDetail?.category}</Typography>
           </Breadcrumbs>
           <hr />
           <div>
@@ -98,25 +104,23 @@ const NewsDetails = () => {
             />
             <div className="flex justify-between items-center my-2">
               <span className="text-yellow-700 font-bold text-[13px]">
-              {blogDetail?.category} news
+                {blogDetail?.category} news
               </span>
               <span className="text-black/40 text-[12px]">
-                Posted on January 8, 2024 at 3:18 pm
+                Posted on {blogDetail?.createdAt ? blogDetail?.createdAt.substring(0, 24) : null}
               </span>
             </div>
             <hr />
           </div>
           <div className="lg:px-36 md:px-24 px-2 mt-2">
             <h1 className="lg:text-[25px] text-[22px] text-black/90 font-[500] leading-9 w-full">
-            {blogDetail?.subheading}
+              {blogDetail?.subheading}
             </h1>
             <h1 className="text-[22px] py-4 text-black/70 leading-7">
-            {blogDetail?.middlehead}
+              {blogDetail?.middlehead}
             </h1>
             <hr />
-            <h2 className="pt-2">
-            {paragraphs}
-            </h2>
+            <h2 className="pt-2">{paragraphs}</h2>
             <div className="mt-3">
               <Accordion>
                 <AccordionSummary
@@ -161,7 +165,7 @@ const NewsDetails = () => {
           </div>
         </div>
       </div>
-      <RelatedFeeds blog={blogs}/>
+      <RelatedFeeds blog={blogs} />
     </div>
   );
 };

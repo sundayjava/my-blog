@@ -1,7 +1,6 @@
 import { DoDisturbOn } from "@mui/icons-material";
 import { category } from "../data/category";
 import NewsList from "../components/NewsList";
-import MustReadList from "../components/MustRead/MustReadList";
 import WeeklyList from "../components/weeklyhighlight/WeeklyList";
 import { useNavigate } from "react-router-dom";
 import TypewriterComponent from "typewriter-effect";
@@ -139,8 +138,6 @@ const Homepage = () => {
       </div>
       <hr className="mb-2" />
       <NewsList blog={blogs}/>
-      <hr className="mb-2 mt-2" />
-      <MustReadList />
       <hr className="mb-2 mt-2" />
       <WeeklyList />
     </div>
