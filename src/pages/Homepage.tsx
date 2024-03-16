@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { getDocs, collection, orderBy, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import MomentTimeDisplay from "../utils/dateFormatted";
-import notfound from "../assets/notfound.png";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 type BlogData = {

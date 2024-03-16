@@ -1,9 +1,7 @@
-import { Close, Email, Menu, Search } from "@mui/icons-material";
+import { Close, Email, Menu } from "@mui/icons-material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const navigate = useNavigate()
   const [toggle, setToggle] = useState(false);
 
   return (
