@@ -1,8 +1,32 @@
 import { Close, Email, Menu } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AuthModal from "../pages/Auth/AuthModal";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [toggle, setToggle] = useState(false);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
+  const navigate = useNavigate()
+  const location = useLocation();
+
+  const handleOpen = () => {
+    setOpenAuthModal(true);
+  };
+
+  const handleClose = () => {
+    setOpenAuthModal(false);
+  };
+
+  useEffect(() => {
+    // if (auth.user) {
+    //   handleClose();
+    // }
+    if (location.pathname === "/login" || location.pathname === "/register") {
+      navigate(-1);
+    }
+  }, [
+    // auth.user
+  ]);
 
   return (
     <div className="bg bg-gray-900 text-white flex justify-center items-center lg:px-52 px-5 py-2 fixed w-full z-10">
@@ -16,18 +40,18 @@ const Navbar = () => {
           </a>
           <Email sx={{ cursor: "pointer" }} />
         </div>
-        <h1 className="text-yellow-600 font-bold text-[24px] uppercase">
+        <h1 className="text-yellow-500 font-bold text-[24px] uppercase">
           Newstopedia
         </h1>
         <div className="flex justify-between items-center gap-8">
-          <button className="bg-yellow-600 text-[15px] px-4 py-1 rounded-md lg:block hidden">Login</button>
-          <button className="bg-yellow-600 text-[15px] px-4 py-1 rounded-md lg:block hidden">
+          <button className="bg-yellow-500 text-[15px] px-4 py-1 rounded-md lg:block hidden" onClick={handleOpen}>Login</button>
+          <button className="bg-yellow-500 text-[15px] px-4 py-1 rounded-md lg:block hidden">
             Subscribe
           </button>
           {/* <div className=" cursor-pointer" onClick={()=>navigate("/search")}>
           <Search/>
           </div> */}
-          <button className="bg-yellow-600 lg:hidden text-[15px] px-4 py-1 rounded-md">
+          <button className="bg-yellow-600 lg:hidden text-[15px] px-4 py-1 rounded-md" onClick={handleOpen}>
           Login
         </button>
         </div>
@@ -42,6 +66,7 @@ const Navbar = () => {
         </button>
         
       </div>
+      <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
   );
 };

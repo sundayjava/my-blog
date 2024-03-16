@@ -5,7 +5,6 @@ import NewsDetails from "./pages/NewsDetails";
 import Footer from "./components/Footer";
 import AdminLogin from "./Admin/pages/AdminLogin";
 import DetectNetwork from "./Admin/components/DetectNetwork";
-import Login from "./pages/Login";
 import ReadMore from "./pages/ReadMore";
 
 function App() {
@@ -18,7 +17,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Homepage />} />
               <Route path="/news/:id" element={<NewsDetails />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Homepage />} />
               <Route path="/specific/:type" element={<ReadMore />} />
               <Route path="/admin" element={<AdminLogin />} />
             </Routes>
