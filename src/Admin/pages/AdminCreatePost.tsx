@@ -10,7 +10,7 @@ import { Alert, Box, CircularProgress } from "@mui/material";
 const AdminCreatePost = () => {
   const [postImg, setPostImg] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [success,setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<any>("");
   const [blogData, setBlogData] = useState({
     category: "",
@@ -18,6 +18,7 @@ const AdminCreatePost = () => {
     subHead: "",
     middleHead: "",
     mainBody: "",
+    highlight: "",
   });
 
   const handleChange = (e: any) => {
@@ -71,11 +72,12 @@ const AdminCreatePost = () => {
                   subheading: blogData.subHead,
                   middlehead: blogData.middleHead,
                   mainbody: blogData.mainBody,
-                  createdAt:Date()
+                  highlight: blogData.highlight,
+                  createdAt: Date(),
                 });
 
                 setIsLoading(false);
-                setSuccess(true)
+                setSuccess(true);
                 setTimeout(() => {
                   setSuccess(false);
                 }, 3000);
@@ -85,8 +87,9 @@ const AdminCreatePost = () => {
                   subHead: "",
                   middleHead: "",
                   mainBody: "",
+                  highlight: "",
                 });
-                setPostImg(null)
+                setPostImg(null);
               }
             );
           }
@@ -232,6 +235,20 @@ const AdminCreatePost = () => {
             className="border px-3 py-1 outline-blue-200  w-full rounded-md"
             placeholder="“Even when we were warming up they got booed when they came out. in front of a crowd it definitely  fans who came out tonight. They were excellent, very vocal and really pushed the team through and you really felt that in the second half."
           />
+        </div>
+        <div className="flex flex-col gap-1 mt-4">
+          <label htmlFor="body" className="text-[14px] text-black/70">
+            Is Weekly Highlight?
+          </label>
+          <select
+            name="highlight"
+            value={blogData.highlight}
+            onChange={handleChange}
+            className="w-full border outline-blue-200 px-5 py-1 rounded-md text-[14px] text-black/80"
+          >
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
         <div className="w-full flex justify-end">
           {!isLoading ? (

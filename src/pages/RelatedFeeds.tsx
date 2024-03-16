@@ -46,8 +46,8 @@ const RelatedFeeds = (props: { blog: BlogData[] }) => {
                 </p>
                 <span className="text-white/30">10 hours ago</span>
               </div>
-              <h2 className="font-[500] text-[15px] text-white/60 hover:font-bold cursor-pointer">
-                {items.heading.slice(0, 50)}
+              <h2 className="font-[500] line-clamp-1 text-[15px] text-white/60 hover:font-bold cursor-pointer">
+                {items.heading}
               </h2>
               <p className="text-yellow-500 font-normal text-[13px]">
                 {items.category}{" "}

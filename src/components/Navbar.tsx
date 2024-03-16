@@ -1,7 +1,9 @@
 import { Close, Email, Menu, Search } from "@mui/icons-material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const [toggle, setToggle] = useState(false);
 
   return (
@@ -20,11 +22,16 @@ const Navbar = () => {
           Newstopedia
         </h1>
         <div className="flex justify-between items-center gap-8">
+          <button className="bg-yellow-600 text-[15px] px-4 py-1 rounded-md lg:block hidden">Login</button>
           <button className="bg-yellow-600 text-[15px] px-4 py-1 rounded-md lg:block hidden">
             Subscribe
           </button>
-          <button className="text-[15px] lg:block hidden">Login</button>
-          <Search sx={{ cursor: "pointer" }} />
+          {/* <div className=" cursor-pointer" onClick={()=>navigate("/search")}>
+          <Search/>
+          </div> */}
+          <button className="bg-yellow-600 lg:hidden text-[15px] px-4 py-1 rounded-md">
+          Login
+        </button>
         </div>
       </div>
       <div
@@ -35,9 +42,7 @@ const Navbar = () => {
         <button className="bg-yellow-600 text-[15px] mb-5 px-4 py-1 rounded-md">
           Subscribe
         </button>
-        <button className="bg-yellow-600 text-[15px] px-4 py-1 rounded-md ">
-          Login
-        </button>
+        
       </div>
     </div>
   );

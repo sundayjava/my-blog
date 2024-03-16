@@ -9,6 +9,7 @@ import { getDocs, collection, orderBy, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import MomentTimeDisplay from "../utils/dateFormatted";
 import notfound from "../assets/notfound.png";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 type BlogData = {
   id: string;
@@ -25,18 +26,22 @@ const Homepage = () => {
   const navigate = useNavigate();
   const [blogs, setBlogs] = useState<BlogData[]>([]);
   const [descblogs, setDesBlogs] = useState<BlogData[]>([]);
+  const [latestblogs, setLatestBlogs] = useState<BlogData[]>([]);
   const [changeCategory, setChangeCategory] = useState("");
+  const [loading, setIsloading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsloading(true)
       try {
         const q = query(
           collection(db, "blog"),
           where("category", "==", changeCategory)
         );
+        const q2 = query(collection(db, "blog"), orderBy("createdAt", "desc"));
         let querySnapshot;
         if (changeCategory === "" || changeCategory === "All") {
-          querySnapshot = await getDocs(collection(db, "blog"));
+          querySnapshot = await getDocs(q2);
         } else {
           querySnapshot = await getDocs(q);
         }
@@ -48,8 +53,10 @@ const Homepage = () => {
             } as BlogData)
         );
         setBlogs(data);
+        setIsloading(false)
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsloading(true)
       }
     };
 
@@ -58,8 +65,12 @@ const Homepage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsloading(true)
       try {
-        const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
+        const q = query(
+          collection(db, "blog"),
+          where("highlight", "==", "yes")
+        );
 
         const querySnapshot = await getDocs(q);
         const data = querySnapshot.docs.map(
@@ -70,8 +81,34 @@ const Homepage = () => {
             } as BlogData)
         );
         setDesBlogs(data);
+        setIsloading(false)
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsloading(true)
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsloading(true)
+      try {
+        const q = query(collection(db, "blog"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const data = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as BlogData)
+        );
+        setLatestBlogs(data);
+        setIsloading(false)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsloading(true)
       }
     };
 
@@ -80,7 +117,7 @@ const Homepage = () => {
 
   return (
     <div className="w-full">
-      <ul className="flex w-full gap-2 lg:gap-16 lg:justify-center overflow-x-scroll border-t border-b py-2">
+      <ul className="flex w-full gap-2 lg:gap-16 lg:justify-center overflow-x-scroll lg:overflow-hidden bg-gray-700 border-t border-b py-2">
         {category.map((item) => (
           <li
             key={item.id}
@@ -107,20 +144,14 @@ const Homepage = () => {
           }}
         />
       </div>
-      <div id="HB_Footer_Close_hbagency_space_127049">
-        <div id="HB_CLOSE_hbagency_space_127049"></div>
-        <div id="HB_OUTER_hbagency_space_127049">
-          <div id="hbagency_space_127049"></div>
-        </div>
-      </div>
-      {blogs.length ? (
+      {!loading && blogs.length ? (
         <div className="md:my-6 flex h-[40%] rounded-lg">
           <div
-            className="lg:w-[65%] w-full relative cursor-pointer flex justify-center"
+            className="lg:w-[65%] w-full h-[40vh] relative cursor-pointer flex justify-center"
             onClick={() => navigate(`/news/${blogs[0]?.id}`)}
           >
             <img
-              className="lg:w-[45vw] w-full h-full hover:rounded-lg rounded-md "
+              className="lg:w-[45vw] w-full h-full object-cover hover:rounded-lg rounded-md "
               src={blogs[0]?.photoURL}
             />
             <div className="absolute bottom-8 px-3 py-3 hover:bg-yellow-400/30 hover:text-white text-transparent rounded-md cursor-pointer lg:block hidden">
@@ -140,7 +171,7 @@ const Homepage = () => {
           <div className="w-[30%] hidden lg:flex flex-col justify-center items-center">
             {blogs.slice(1, 4).map((items, index) => (
               <div
-                className="flex gap-2 mb-4 cursor-pointer border-b pb-2 items-center"
+                className="flex bg-gray-800 px-2 text-white/80 gap-2 mb-4 cursor-pointer border-b pb-2 items-center"
                 key={items.id}
                 onClick={() => navigate(`/news/${items.id}`)}
               >
@@ -149,7 +180,7 @@ const Homepage = () => {
                   src={items.photoURL}
                 />
                 <div>
-                  <h2 className="text-[15px] font-[500]">{items.heading}</h2>
+                  <h2 className="text-[15px] font-[500] line-clamp-2">{items.heading}</h2>
                   <div className="flex justify-between items-center">
                     <p className="text-[12px] text-yellow-600">
                       {index % 2 ? (
@@ -173,21 +204,15 @@ const Homepage = () => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col p-5 justify-center items-center">
-          <img src={notfound} />
-          <span className="text-[12px] text-black/50 font-bold">
-            No data found for{" "}
-            <span className="text-yellow-700">{changeCategory}</span>
-          </span>
-        </div>
+        <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={true}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
       )}
-      <div className="hb-ad-inpage">
-        <div className="hb-ad-inner">
-          <div className="hbagency_cls hbagency_space_127055"></div>
-        </div>{" "}
-      </div>
       <hr className="mb-2" />
-      {blogs && <NewsList blog={blogs} />}
+      {blogs && <NewsList blog={latestblogs} />}
       <hr className="mb-2 mt-2" />
       <WeeklyList item={descblogs} />
     </div>

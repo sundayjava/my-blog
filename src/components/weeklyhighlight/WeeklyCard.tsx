@@ -17,7 +17,7 @@ const WeeklyCard = (props:{item:BlogData}) => {
   const navigate = useNavigate()
 
   return (
-    <div className="lg:w-[33%] w-full h-full p-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-yellow-50"
+    <div className="lg:w-[33%] w-full h-full p-2 bg-gray-600 mb-2 rounded-lg hover:shadow-lg cursor-pointer hover:bg-gray-700"
     onClick={() => navigate(`/news/${item.id}`)}
     >
       <img
@@ -35,7 +35,7 @@ const WeeklyCard = (props:{item:BlogData}) => {
                       <MomentTimeDisplay timestamp={item.createdAt} />
                     ) : null}</span>
         </div>
-        <h2 className="font-[500] text-[15px] hover:text-yellow-600 hover:font-bold cursor-pointer">
+        <h2 className="font-[500] line-clamp-2 text-[15px] hover:text-yellow-600 hover:font-bold cursor-pointer">
         {item.heading}
         </h2>
         <p className="text-yellow-500 font-normal text-[13px]">
