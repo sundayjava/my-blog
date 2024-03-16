@@ -1,12 +1,19 @@
-import { Close, Email, Menu } from "@mui/icons-material";
+import { Close, Email } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import AuthModal from "../pages/Auth/AuthModal";
 import { useLocation, useNavigate } from "react-router-dom";
+import { auth } from "../config/firebaseConfig";
+import { Avatar, MenuItem } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
   const [toggle, setToggle] = useState(false);
   const [openAuthModal, setOpenAuthModal] = useState(false);
-  const navigate = useNavigate()
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const location = useLocation();
 
   const handleOpen = () => {
@@ -18,21 +25,42 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // if (auth.user) {
-    //   handleClose();
-    // }
+    if (auth.currentUser) {
+      handleClose();
+    }
     if (location.pathname === "/login" || location.pathname === "/register") {
       navigate(-1);
     }
-  }, [
-    // auth.user
-  ]);
+  }, [auth.currentUser]);
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleProfileClose = () => {
+    setAnchorEl(null);
+  };
+
+  const signout = () => {
+    signOut(auth)
+      .then(() => {
+        handleProfileClose();
+      })
+      .catch((_error) => {
+        alert("something went wrong");
+      });
+  };
+
+  const profileNav = () => {
+    // navigate("/profile");
+    alert('Not supported for now')
+    handleProfileClose();
+  };
 
   return (
     <div className="bg bg-gray-900 text-white flex justify-center items-center lg:px-52 px-5 py-2 fixed w-full z-10">
       <div className="flex justify-between items-center w-full">
         <div className="lg:hidden" onClick={() => setToggle((prev) => !prev)}>
-         {!toggle ? <Menu /> : <Close/>}
+          {!toggle ? <MenuIcon /> : <Close />}
         </div>
         <div className="cursor-pointer lg:flex hidden">
           <a className="cursor-pointer hover:underline mr-5">
@@ -44,16 +72,56 @@ const Navbar = () => {
           Newstopedia
         </h1>
         <div className="flex justify-between items-center gap-8">
-          <button className="bg-yellow-500 text-[15px] px-4 py-1 rounded-md lg:block hidden" onClick={handleOpen}>Login</button>
+          {auth.currentUser ? (
+            <div className="lg:block hidden cursor-pointer">
+              <Avatar
+                id="basic-button"
+                aria-controls={open ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleClick}
+                alt="Remy Sharp"
+                src={`${auth.currentUser.photoURL}`}
+              />
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleProfileClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
+              >
+                <MenuItem onClick={profileNav}>My account</MenuItem>
+                <MenuItem onClick={signout}>Logout</MenuItem>
+              </Menu>
+            </div>
+          ) : (
+            <button
+              className="bg-yellow-600 lg:block hidden text-[15px] px-4 py-1 rounded-md"
+              onClick={handleOpen}
+            >
+              Login
+            </button>
+          )}
           <button className="bg-yellow-500 text-[15px] px-4 py-1 rounded-md lg:block hidden">
             Subscribe
           </button>
           {/* <div className=" cursor-pointer" onClick={()=>navigate("/search")}>
           <Search/>
           </div> */}
-          <button className="bg-yellow-600 lg:hidden text-[15px] px-4 py-1 rounded-md" onClick={handleOpen}>
-          Login
-        </button>
+          {auth.currentUser ? (
+            <div className="lg:hidden text-[15px] px-4 py-1 rounded-md cursor-pointer">
+              <Avatar alt="Remy Sharp" src={`${auth.currentUser.photoURL}`} />
+            </div>
+          ) : (
+            <button
+              className="bg-yellow-600 lg:hidden text-[15px] px-4 py-1 rounded-md"
+              onClick={handleOpen}
+            >
+              Login
+            </button>
+          )}
         </div>
       </div>
       <div
@@ -64,7 +132,6 @@ const Navbar = () => {
         <button className="bg-yellow-600 text-[15px] mb-5 px-4 py-1 rounded-md">
           Subscribe
         </button>
-        
       </div>
       <AuthModal handleClose={handleClose} open={openAuthModal} />
     </div>
